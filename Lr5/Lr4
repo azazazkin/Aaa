@@ -1,0 +1,206 @@
+<resources>
+    <string name="app_name">Изучение TextView</string>
+    
+    <!-- Для Упражнения 3 -->
+    <color name="tvBackground">#337700</color>
+
+    <!-- Для Упражнения 4 (многострочный текст с форматированием) -->
+    <string name="about_text">
+        У лукоморья дуб зелёный;\n
+        Златая цепь на дубе том:\n
+        И днём и ночью <b>кот учёный</b>\n
+        Всё ходит по цепи кругом;\n
+        Идёт <b>направо</b> - песнь заводит,\n
+        <b>налево</b> - сказку говорит.
+    </string>
+    
+    <!-- Для Упражнения 7 (HTML-ссылка) -->
+    <string name="my_site">
+        <a href="http://developer.alexanderklimov.ru/android">Самый лучший сайт про android</a>
+    </string>
+</resources>
+
+
+
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- ================= УПРАЖНЕНИЕ 1 ================= -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:text="Hello Android"
+            android:fontFamily="sans-serif"
+            android:textSize="26sp"
+            android:background="#ffebeе"
+            android:textColor="#f44336" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:text="Android Nougat"
+            android:textAllCaps="true"
+            android:textSize="26sp"
+            android:background="#ede7f6"
+            android:textColor="#7e57c2" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:text="Hello Android"
+            android:textAlignment="textEnd"
+            android:textSize="26sp"
+            android:background="#e8eaf6"
+            android:textColor="#5c6bc0"
+            android:gravity="end"
+            android:layout_gravity="end" />
+
+        <!-- ================= УПРАЖНЕНИЕ 3 ================= -->
+        <!-- Текст с зеленым фоном из ресурсов -->
+        <TextView
+            android:id="@+id/tvGreenBg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Зеленый фон из ресурсов"
+            android:textSize="20sp" />
+
+        <!-- ================= УПРАЖНЕНИЕ 4 ================= -->
+        <!-- Многострочный текст с \n и <b> -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/about_text"
+            android:textSize="18sp" />
+
+        <!-- ================= УПРАЖНЕНИЕ 5 ================= -->
+        <!-- Изменение интервала (lineSpacingMultiplier) -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:lineSpacingMultiplier="1.5"
+            android:text="Этот текст имеет увеличенный интервал между строками.\nLineSpacingMultiplier = 1.5"
+            android:textSize="18sp" />
+
+        <!-- ================= УПРАЖНЕНИЕ 6 ================= -->
+        <!-- Тень текста -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:padding="12dp"
+            android:text="Бой с тенью"
+            android:textSize="40sp"
+            android:textStyle="bold"
+            android:shadowColor="#ff0000"
+            android:shadowDx="2"
+            android:shadowDy="2"
+            android:shadowRadius="5" />
+
+        <!-- ================= УПРАЖНЕНИЕ 7 ================= -->
+        <!-- AutoLink -->
+        <TextView
+            android:id="@+id/display_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Посетите сайт https://metanit.com"
+            android:textSize="21sp"
+            android:autoLink="web|email" />
+
+        <!-- TextView для вывода ссылок через код -->
+        <TextView
+            android:id="@+id/tvDisplayLinks"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:textSize="16sp" />
+
+        <!-- Ссылка из HTML-ресурса -->
+        <TextView
+            android:id="@+id/tvHtmlLink"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/my_site"
+            android:textSize="18sp" />
+
+    </LinearLayout>
+</ScrollView>
+
+
+
+package com.example.lr5; // Укажите ваш package
+
+import androidx.appcompat.app.AppCompatActivity;
+import android.graphics.Color;
+import android.graphics.Typeface;
+import android.os.Bundle;
+import android.text.util.Linkify;
+import android.widget.TextView;
+
+public class MainActivity extends AppCompatActivity {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        // === УПРАЖНЕНИЕ 2. Работа с TextView из кода ===
+        // Создадим TextView программно и добавим его в наш LinearLayout
+        // (Для этого нам нужен доступ к корневому LinearLayout, но проще найти любой TextView)
+        // Воспользуемся тем, что есть в XML.
+        
+        // --- УПРАЖНЕНИЕ 3: Установка фона из ресурсов ---
+        TextView tvGreenBg = findViewById(R.id.tvGreenBg);
+        // В новых версиях Android используется ContextCompat.getColor()
+        tvGreenBg.setBackgroundColor(getResources().getColor(R.color.tvBackground, getTheme()));
+
+        // --- УПРАЖНЕНИЕ 2 (продолжение): Программная настройка ---
+        // (Создадим еще один TextView невидимый в XML, чтобы показать работу кода)
+        TextView textViewProgram = new TextView(this);
+        textViewProgram.setText("Изучаем Android Studio (из кода)");
+        textViewProgram.setBackgroundColor(0xffe8eaf6);
+        textViewProgram.setTextColor(0xff5c6bc0);
+        textViewProgram.setAllCaps(true);
+        textViewProgram.setTypeface(Typeface.create("casual", Typeface.NORMAL));
+        textViewProgram.setTextSize(26);
+
+        // === УПРАЖНЕНИЕ 7. Linkify ===
+        TextView tvDisplayLinks = findViewById(R.id.tvDisplayLinks);
+
+        String data = "" +
+                "Пример использования Linkify для создания ссылок в тексте.\n" +
+                "\n" +
+                "URL: http://developer.alexanderklimov.ru/ \n" +
+                "Email: barsik@yanesobaka.com \n" +
+                "Телефон: (495)-458-58-29 \n" +
+                "Адрес: 10110 ул.Котовского, г.Мышкин \n" +
+                "\n" +
+                "Классно получилось?";
+
+        if (tvDisplayLinks != null) {
+            tvDisplayLinks.setText(data);
+            // Автоматически находим ссылки, емейлы и телефоны и делаем их кликабельными
+            Linkify.addLinks(tvDisplayLinks, Linkify.ALL);
+        }
+
+        // === Ссылка из HTML-ресурса ===
+        TextView tvHtmlLink = findViewById(R.id.tvHtmlLink);
+        // Чтобы HTML-тег <a> сработал, нужно применить метод setMovementMethod
+        tvHtmlLink.setMovementMethod(android.text.method.LinkMovementMethod.getInstance());
+    }
+}
