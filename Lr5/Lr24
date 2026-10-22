@@ -1,0 +1,195 @@
+<Window x:Class="LR24.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Новый товар" Height="450" Width="400">
+    
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0" Text="Новый товар" FontSize="20" FontWeight="Bold" Margin="0,0,0,15"/>
+
+        <!-- Название -->
+        <StackPanel Grid.Row="1" Margin="0,0,0,10">
+            <TextBlock Text="Название товара" FontSize="12" Foreground="Gray"/>
+            <TextBox x:Name="NameTextBox" Height="25"/>
+        </StackPanel>
+
+        <!-- Производитель (Из самостоятельной работы) -->
+        <StackPanel Grid.Row="2" Margin="0,0,0,10">
+            <TextBlock Text="Производитель" FontSize="12" Foreground="Gray"/>
+            <TextBox x:Name="ManufacturerTextBox" Height="25"/>
+        </StackPanel>
+
+        <!-- Цена -->
+        <StackPanel Grid.Row="3" Margin="0,0,0,10">
+            <TextBlock Text="Цена (руб.)" FontSize="12" Foreground="Gray"/>
+            <TextBox x:Name="PriceTextBox" Height="25"/>
+        </StackPanel>
+
+        <!-- Количество -->
+        <StackPanel Grid.Row="4" Margin="0,0,0,15">
+            <TextBlock Text="Количество" FontSize="12" Foreground="Gray"/>
+            <TextBox x:Name="QuantityTextBox" Height="25"/>
+        </StackPanel>
+
+        <!-- Кнопка -->
+        <Button Grid.Row="5" Content="Добавить товар" Click="AddButton_Click" Height="35" Margin="0,0,0,15"/>
+
+        <!-- Блок результата -->
+        <TextBlock Grid.Row="6" Text="Тут будет результат" FontWeight="SemiBold"/>
+        <TextBlock x:Name="ResultTextBlock" Grid.Row="7" TextWrapping="Wrap" Margin="0,5,0,0"/>
+    </Grid>
+</Window>
+
+
+
+using System;
+using System.Windows;
+
+namespace LR24
+{
+    public partial class MainWindow : Window
+    {
+        public MainWindow()
+        {
+            InitializeComponent();
+        }
+
+        private void AddButton_Click(object sender, RoutedEventArgs e)
+        {
+            // 1. ПРОВЕРКА ИМЕНИ (Шаг 2)
+            string name = NameTextBox.Text.Trim();
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                MessageBox.Show("Введите название товара.", "Ошибка ввода", MessageBoxButton.OK, MessageBoxImage.Warning);
+                NameTextBox.Focus();
+                return; // Прерываем выполнение
+            }
+
+            // 2. ПРОВЕРКА ПРОИЗВОДИТЕЛЯ (Из самостоятельной работы)
+            string manufacturer = ManufacturerTextBox.Text.Trim();
+            if (string.IsNullOrWhiteSpace(manufacturer))
+            {
+                MessageBox.Show("Введите производителя товара.", "Ошибка ввода", MessageBoxButton.OK, MessageBoxImage.Warning);
+                ManufacturerTextBox.Focus();
+                return;
+            }
+
+            // 3. ПРОВЕРКА ЦЕНЫ (Шаг 3)
+            if (!decimal.TryParse(PriceTextBox.Text, out decimal price))
+            {
+                MessageBox.Show("Цена должна быть числом.", "Ошибка ввода", MessageBoxButton.OK, MessageBoxImage.Warning);
+                PriceTextBox.Focus();
+                return;
+            }
+
+            if (price <= 0)
+            {
+                MessageBox.Show("Цена должна быть больше нуля.", "Ошибка ввода", MessageBoxButton.OK, MessageBoxImage.Warning);
+                PriceTextBox.Focus();
+                return;
+            }
+
+            // 4. ПРОВЕРКА КОЛИЧЕСТВА (Шаг 4)
+            // В методичке написано int.TryParse
+            if (!int.TryParse(QuantityTextBox.Text, out int quantity))
+            {
+                MessageBox.Show("Количество должно быть целым числом.", "Ошибка ввода", MessageBoxButton.OK, MessageBoxImage.Warning);
+                QuantityTextBox.Focus();
+                return;
+            }
+
+            if (quantity < 0)
+            {
+                MessageBox.Show("Количество не может быть отрицательным.", "Ошибка ввода", MessageBoxButton.OK, MessageBoxImage.Warning);
+                QuantityTextBox.Focus();
+                return;
+            }
+
+            // 5. ВСЕ ПРОВЕРКИ ПРОЙДЕНЫ
+            ResultTextBlock.Text = $"Товар добавлен!\nНазвание: {name}\nПроизводитель: {manufacturer}\nЦена: {price} руб.\nКоличество: {quantity} шт.";
+            MessageBox.Show("Данные проверены. Товар можно добавить.", "Успех");
+        }
+    }
+}
+
+
+
+using System;
+using System.Windows;
+
+namespace LR24
+{
+    public partial class MainWindow : Window
+    {
+        public MainWindow()
+        {
+            InitializeComponent();
+        }
+
+        private void AddButton_Click(object sender, RoutedEventArgs e)
+        {
+            // 1. ПРОВЕРКА ИМЕНИ (Шаг 2)
+            string name = NameTextBox.Text.Trim();
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                MessageBox.Show("Введите название товара.", "Ошибка ввода", MessageBoxButton.OK, MessageBoxImage.Warning);
+                NameTextBox.Focus();
+                return; // Прерываем выполнение
+            }
+
+            // 2. ПРОВЕРКА ПРОИЗВОДИТЕЛЯ (Из самостоятельной работы)
+            string manufacturer = ManufacturerTextBox.Text.Trim();
+            if (string.IsNullOrWhiteSpace(manufacturer))
+            {
+                MessageBox.Show("Введите производителя товара.", "Ошибка ввода", MessageBoxButton.OK, MessageBoxImage.Warning);
+                ManufacturerTextBox.Focus();
+                return;
+            }
+
+            // 3. ПРОВЕРКА ЦЕНЫ (Шаг 3)
+            if (!decimal.TryParse(PriceTextBox.Text, out decimal price))
+            {
+                MessageBox.Show("Цена должна быть числом.", "Ошибка ввода", MessageBoxButton.OK, MessageBoxImage.Warning);
+                PriceTextBox.Focus();
+                return;
+            }
+
+            if (price <= 0)
+            {
+                MessageBox.Show("Цена должна быть больше нуля.", "Ошибка ввода", MessageBoxButton.OK, MessageBoxImage.Warning);
+                PriceTextBox.Focus();
+                return;
+            }
+
+            // 4. ПРОВЕРКА КОЛИЧЕСТВА (Шаг 4)
+            // В методичке написано int.TryParse
+            if (!int.TryParse(QuantityTextBox.Text, out int quantity))
+            {
+                MessageBox.Show("Количество должно быть целым числом.", "Ошибка ввода", MessageBoxButton.OK, MessageBoxImage.Warning);
+                QuantityTextBox.Focus();
+                return;
+            }
+
+            if (quantity < 0)
+            {
+                MessageBox.Show("Количество не может быть отрицательным.", "Ошибка ввода", MessageBoxButton.OK, MessageBoxImage.Warning);
+                QuantityTextBox.Focus();
+                return;
+            }
+
+            // 5. ВСЕ ПРОВЕРКИ ПРОЙДЕНЫ
+            ResultTextBlock.Text = $"Товар добавлен!\nНазвание: {name}\nПроизводитель: {manufacturer}\nЦена: {price} руб.\nКоличество: {quantity} шт.";
+            MessageBox.Show("Данные проверены. Товар можно добавить.", "Успех");
+        }
+    }
+}
