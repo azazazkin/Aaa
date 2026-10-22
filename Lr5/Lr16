@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Размеры текста (в sp) -->
+    <dimen name="text_size_title_screen">24sp</dimen>
+    <dimen name="text_size_title_group">18sp</dimen>
+    <dimen name="text_size_item">16sp</dimen>
+
+    <!-- Отступы (в dp) -->
+    <dimen name="spacing_screen_padding">16dp</dimen>
+    <dimen name="spacing_between_groups">24dp</dimen>
+    <dimen name="spacing_group_inner_padding">12dp</dimen>
+    <dimen name="spacing_item_margin">8dp</dimen>
+
+    <!-- Высота элемента (в dp) -->
+    <dimen name="button_height">48dp</dimen>
+</resources>
+
+
+<resources>
+    <string name="app_name">Каталог товаров</string>
+    
+    <string name="screen_title">Настройки приложения</string>
+    <string name="group_appearance">Внешний вид</string>
+    <string name="group_notifications">Уведомления</string>
+    
+    <string name="setting_images">Показывать изображения</string>
+    <string name="setting_descriptions">Показывать описания</string>
+    <string name="setting_discounts">Уведомлять о скидках</string>
+    <string name="setting_new_items">Уведомлять о новинках</string>
+    
+    <string name="btn_apply">Применить настройки</string>
+</resources>
+
+
+
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="@dimen/spacing_screen_padding"> <!-- Используем ресурс -->
+
+        <!-- Заголовок экрана -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/screen_title"
+            android:textSize="@dimen/text_size_title_screen" 
+            android:textStyle="bold" />
+
+        <!-- ================= ГРУППА 1 ================= -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="@dimen/spacing_between_groups"
+            android:padding="@dimen/spacing_group_inner_padding"
+            android:background="#F5F5F5">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/group_appearance"
+                android:textSize="@dimen/text_size_title_group"
+                android:textStyle="bold"
+                android:layout_marginBottom="@dimen/spacing_item_margin" /> 
+
+            <CheckBox
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/setting_images"
+                android:textSize="@dimen/text_size_item" />
+
+            <CheckBox
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/setting_descriptions"
+                android:textSize="@dimen/text_size_item"
+                android:layout_marginTop="@dimen/spacing_item_margin" /> <!-- Место 2 -->
+        </LinearLayout>
+
+        <!-- ================= ГРУППА 2 ================= -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="@dimen/spacing_between_groups"
+            android:padding="@dimen/spacing_group_inner_padding"
+            android:background="#F5F5F5">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/group_notifications"
+                android:textSize="@dimen/text_size_title_group"
+                android:textStyle="bold"
+                android:layout_marginBottom="@dimen/spacing_item_margin" /> 
+
+            <CheckBox
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/setting_discounts"
+                android:textSize="@dimen/text_size_item" />
+
+            <CheckBox
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/setting_new_items"
+                android:textSize="@dimen/text_size_item"
+                android:layout_marginTop="@dimen/spacing_item_margin" /> <!-- Место 3 -->
+        </LinearLayout>
+
+        <!-- Кнопка (требование 5: высота из ресурса) -->
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/button_height" 
+            android:layout_marginTop="@dimen/spacing_between_groups"
+            android:text="@string/btn_apply"
+            android:textSize="@dimen/text_size_item" /> <!-- Место 4 -->
+
+    </LinearLayout>
+</ScrollView>
