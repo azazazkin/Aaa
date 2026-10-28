@@ -1,0 +1,54 @@
+package com.example.myapplication; // Укажите ваш package!
+
+import androidx.appcompat.app.AppCompatActivity;
+import android.graphics.drawable.ColorDrawable;
+import android.os.Bundle;
+import android.view.Window;
+import android.widget.TextView;
+
+public class MainActivity extends AppCompatActivity {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // Обратите внимание: ссылка на вашу разметку activity_ex1
+        setContentView(R.layout.activity_ex1); 
+
+        // 1. Загрузка массива строк из array.xml
+        final TextView textString = findViewById(R.id.text_string);
+        String[] names = getResources().getStringArray(R.array.names);
+        StringBuilder sbString = new StringBuilder(); // Используем StringBuilder для склейки текста
+        for (int i = 0; i < names.length; i++) {
+            sbString.append("Name[").append(i).append("]:").append(names[i]).append("\n");
+        }
+        textString.setText(sbString.toString()); // Устанавливаем готовый текст
+
+        // 2. Загрузка массива целых чисел из array.xml
+        final TextView textDigits = findViewById(R.id.text_digit);
+        int[] digits = getResources().getIntArray(R.array.digits);
+        StringBuilder sbDigits = new StringBuilder();
+        for (int i = 0; i < digits.length; i++) {
+            sbDigits.append("Name[").append(i).append("]:").append(digits[i]).append("\n");
+        }
+        textDigits.setText(sbDigits.toString()); // Устанавливаем готовый текст
+
+        // 3. Текстовое поле с атрибутами, загружаемыми из ресурсов
+        final TextView textStyle = findViewById(R.id.text_style);
+        
+        // Загрузка текста из strings.xml
+        textStyle.setText(getResources().getString(R.string.some_text));
+        
+        // Загрузка цвета из colors.xml (с учетом современных требований Android)
+        textStyle.setTextColor(getResources().getColor(R.color.textColor, getTheme()));
+        
+        // Загрузка цвета для фона из colors.xml
+        textStyle.setBackgroundColor(getResources().getColor(R.color.backgroundColor, getTheme()));
+        
+        // Загрузка размера текста из dimens.xml
+        textStyle.setTextSize(android.util.TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.TextPointSize));
+        
+        // Загрузка цвета фона окна Activity из drawables.xml
+        Window w = this.getWindow();
+        w.setBackgroundDrawable(getResources().getDrawable(R.drawable.grayDrawable, getTheme()));
+    }
+}
