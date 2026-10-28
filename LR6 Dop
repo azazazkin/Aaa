@@ -1,0 +1,55 @@
+<resources>
+    <string name="app_name">LR16 Resources</string>
+    
+    <!-- Для главного меню -->
+    <string name="btn_ex1">Упражнение 1: Простые ресурсы</string>
+    <string name="btn_ex2">Упражнение 2: Файл из raw</string>
+    <string name="btn_ex3">Упражнение 3: XML-документ</string>
+
+    <!-- Для Упражнения 1 -->
+    <string name="label_string_array">String array:</string>
+    <string name="label_int_array">Int array:</string>
+    <string name="some_text">Some Text</string>
+
+    <!-- Для Упражнения 2 -->
+    <string name="hello_raw">Raw Resources Sample</string>
+</resources>
+
+
+
+<resources>
+    <!-- Ваши стандартные цвета... -->
+    <color name="textColor">#0000FF</color>
+    <color name="backgroundColor">#FF0000</color>
+</resources>
+
+
+
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="names">
+        <item>Andrew</item>
+        <item>Helen</item>
+        <item>Jack</item>
+    </string-array>
+    <integer-array name="digits">
+        <item>1999</item>
+        <item>2002</item>
+        <item>2010</item>
+    </integer-array>
+</resources>
+
+
+
+
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="TextPointSize">18sp</dimen>
+</resources>
+
+
+
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <drawable name="grayDrawable">#DDDDDD</drawable>
+</resources>
