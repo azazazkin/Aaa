@@ -1,0 +1,77 @@
+package com.example.yourapp; // Ваш package
+
+import androidx.appcompat.app.AppCompatActivity;
+import android.graphics.drawable.ColorDrawable;
+import android.os.Bundle;
+import android.view.Window;
+import android.widget.TextView;
+
+public class MainActivity extends AppCompatActivity {
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        // Загрузка массива строк
+        TextView textString = findViewById(R.id.text_string);
+        String[] names = getResources().getStringArray(R.array.names);
+        StringBuilder sbString = new StringBuilder();
+        for (String name : names) {
+            sbString.append(name).append("\n");
+        }
+        textString.setText(sbString.toString());
+
+        // Загрузка массива чисел
+        TextView textDigits = findViewById(R.id.text_digit);
+        int[] digits = getResources().getIntArray(R.array.digits);
+        StringBuilder sbDigits = new StringBuilder();
+        for (int i = 0; i < digits.length; i++) {
+            sbDigits.append("Name[").append(i).append("]:").append(digits[i]).append("\n");
+        }
+        textDigits.setText(sbDigits.toString());
+
+        // Загрузка строки, цвета, размера и фона
+        TextView textStyle = findViewById(R.id.text_style);
+        textStyle.setText(getResources().getString(R.string.some_text));
+        textStyle.setTextColor(getResources().getColor(R.color.textColor, getTheme()));
+        textStyle.setTextSize(android.util.TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.TextPointSize));
+        textStyle.setBackgroundColor(getResources().getColor(R.color.backgroundColor, getTheme()));
+
+        // Установка фона окна через Drawable
+        Window w = getWindow();
+        w.setBackgroundDrawable(getResources().getDrawable(R.drawable.grayDrawable, getTheme()));
+    }
+}
+
+
+
+<TextView
+    android:id="@+id/text"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="16dp"
+    android:layout_marginStart="16dp"
+    android:text="@string/hello"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent" />
+
+
+// Импорты: добавьте java.io.InputStream, java.io.DataInputStream, java.io.StringBuffer, android.widget.TextView
+// (в современной Java используется StringBuilder вместо StringBuffer, я заменил для надежности)
+
+// Внутри onCreate:
+TextView text = findViewById(R.id.text);
+InputStream iFile = getResources().openRawResource(R.raw.test);
+try {
+    StringBuilder sBuffer = new StringBuilder();
+    DataInputStream dataIO = new DataInputStream(iFile);
+    String strLine = null;
+    while ((strLine = dataIO.readLine()) != null) {
+        sBuffer.append(strLine).append("\n");
+    }
+    dataIO.close();
+    iFile.close();
+    text.setText(sBuffer.toString());
+} catch (Exception e) {
+    text.setText("Error loading file: " + e.getMessage());
+}
