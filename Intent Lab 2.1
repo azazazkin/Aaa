@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <!-- Блок с данными контакта -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="#EEEEEE"
+        android:padding="8dp">
+
+        <TextView
+            android:id="@+id/textName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Name: Andrew Ivanov"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/textPhone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Phone: 123456789"
+            android:textSize="18sp" />
+    </LinearLayout>
+
+    <!-- Кнопка перехода -->
+    <Button
+        android:id="@+id/bEditData"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Edit Data" />
+
+</LinearLayout>
+
+
+
+
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:layout_height="wrap_content"
+        android:layout_width="fill_parent">
+        <TextView
+            android:text="Name: "
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <EditText
+            android:id="@+id/editName"
+            android:layout_height="wrap_content"
+            android:layout_width="fill_parent"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:layout_marginTop="16dp">
+        <TextView
+            android:text="Phone: "
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <EditText
+            android:id="@+id/editPhone"
+            android:layout_height="wrap_content"
+            android:layout_width="fill_parent"/>
+    </LinearLayout>
+
+    <!-- Кнопки сохранения и отмены -->
+    <LinearLayout
+        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:layout_marginTop="24dp"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/bSave"
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:text="SAVE" />
+
+        <Button
+            android:id="@+id/bCancel"
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:text="CANCEL" />
+    </LinearLayout>
+</LinearLayout>
+
+
+
+
+package com.example.contacteditor; // Укажите ваш package!
+
+import androidx.appcompat.app.AppCompatActivity;
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
+
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+
+    private TextView textName;
+    private TextView textPhone;
+
+    // Константы для ключей
+    public final static String NAME = "Name";
+    public final static String PHONE = "Phone";
+    private final static int ACTION_EDIT = 101;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        textName = findViewById(R.id.textName);
+        textPhone = findViewById(R.id.textPhone);
+
+        // Начальные значения
+        textName.setText("Name: Andrew Ivanov");
+        textPhone.setText("Phone: 123456789");
+
+        Button bEditData = findViewById(R.id.bEditData);
+        bEditData.setOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(View v) {
+        Intent intent = new Intent(this, SecondActivity.class);
+        
+        // Передаем текущие данные в виде extra-параметров
+        intent.putExtra(NAME, textName.getText().toString());
+        intent.putExtra(PHONE, textPhone.getText().toString());
+        
+        // Запускаем с ожиданием результата
+        startActivityForResult(intent, ACTION_EDIT);
+    }
+
+    // Метод получения результата из второго окна
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        
+        if (resultCode == RESULT_OK) {
+            Bundle extras = data.getExtras();
+            // Обновляем текстовые поля на главном экране
+            textName.setText(extras.getString(NAME));
+            textPhone.setText(extras.getString(PHONE));
+        }
+    }
+}
+
+
+
+
+package com.example.contacteditor;
+
+import androidx.appcompat.app.AppCompatActivity;
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+
+public class SecondActivity extends AppCompatActivity implements View.OnClickListener {
+
+    private EditText editName;
+    private EditText editPhone;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_second);
+        
+        this.setTitle("Second Activity");
+
+        editName = findViewById(R.id.editName);
+        editPhone = findViewById(R.id.editPhone);
+
+        // Получаем данные, переданные из MainActivity
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            editName.setText(extras.getString(MainActivity.NAME));
+            editPhone.setText(extras.getString(MainActivity.PHONE));
+        }
+
+        Button bSave = findViewById(R.id.bSave);
+        Button bCancel = findViewById(R.id.bCancel);
+        
+        bSave.setOnClickListener(this);
+        bCancel.setOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(View v) {
+        // ИСПРАВЛЕНИЕ: так как у нас две кнопки, мы проверяем, какая именно нажата
+        int id = v.getId();
+        
+        if (id == R.id.bSave) {
+            Intent intent = new Intent();
+            // Кладем измененные данные обратно в Intent
+            intent.putExtra(MainActivity.NAME, editName.getText().toString());
+            intent.putExtra(MainActivity.PHONE, editPhone.getText().toString());
+            
+            // Возвращаем результат успеха
+            setResult(RESULT_OK, intent);
+            finish(); // Закрываем это окно
+        } 
+        else if (id == R.id.bCancel) {
+            // Возвращаем результат отмены
+            setResult(RESULT_CANCELED);
+            finish();
+        }
+    }
+}
