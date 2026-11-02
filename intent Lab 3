@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    android:gravity="center">
+
+    <!-- Картинка, которую будем отправлять -->
+    <ImageView
+        android:id="@+id/image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:src="@mipmap/ic_launcher" /> <!-- Используем стандартную иконку приложения -->
+
+    <Button
+        android:id="@+id/bSendBitmap"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="Send bitmap" />
+
+</LinearLayout>
+
+
+
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:gravity="center">
+
+    <!-- Сюда мы примем картинку -->
+    <ImageView
+        android:id="@+id/image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+</LinearLayout>
+
+
+
+package com.example.sendbitmapbetweenactivities; // Укажите ваш package!
+
+import androidx.appcompat.app.AppCompatActivity;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.Bundle;
+import android.view.View;
+
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        findViewById(R.id.bSendBitmap).setOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(View v) {
+        // 1. Загружаем картинку из ресурсов (в данном случае иконку приложения)
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
+
+        // 2. Создаем Intent для перехода во вторую активити
+        Intent intent = new Intent();
+        intent.setClass(this, SecondActivity.class);
+
+        // 3. Кладем картинку в Intent (передаем по ключу "Bitmap")
+        intent.putExtra("Bitmap", bitmap);
+
+        // 4. Запускаем второе окно
+        startActivity(intent);
+    }
+}
+
+
+
+package com.example.sendbitmapbetweenactivities;
+
+import androidx.appcompat.app.AppCompatActivity;
+import android.graphics.Bitmap;
+import android.os.Bundle;
+import android.widget.ImageView;
+
+public class SecondActivity extends AppCompatActivity {
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_second);
+
+        // 1. Получаем картинку из Intent (используем getParcelableExtra)
+        Bitmap bitmap = (Bitmap) getIntent().getParcelableExtra("Bitmap");
+
+        // 2. Находим ImageView на экране
+        ImageView image = findViewById(R.id.image);
+
+        // 3. Устанавливаем полученную картинку
+        if (bitmap != null) {
+            image.setImageBitmap(bitmap);
+        }
+    }
+}
