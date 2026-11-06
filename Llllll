@@ -1,0 +1,73 @@
+import androidx.appcompat.app.AppCompatActivity;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.Toast;
+
+public class MainActivity extends AppCompatActivity {
+
+    private ImageView imageView;
+    private Button btnShow, btnMove, btnRotate, btnReset;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        // Находим элементы
+        imageView = findViewById(R.id.imageView);
+        btnShow = findViewById(R.id.btnShow);
+        btnMove = findViewById(R.id.btnMove);
+        btnRotate = findViewById(R.id.btnRotate);
+        btnReset = findViewById(R.id.btnReset);
+        imageView.setAlpha(0f);
+
+        btnShow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                imageView.animate()
+                        .alpha(1f) // От 0 (прозрачный) до 1 (непрозрачный)
+                        .setDuration(800)
+                        .withEndAction(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(MainActivity.this, "Картинка появилась!", Toast.LENGTH_SHORT).show();
+                            }
+                        })
+                        .start();
+            }
+        });
+
+        btnMove.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                imageView.animate()
+                        .translationX(150f)
+                        .setDuration(600)
+                        .start();
+            }
+        });
+
+        btnRotate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                imageView.animate()
+                        .rotation(360f) // Поворот на 360 градусов
+                        .setDuration(1000)
+                        .start();
+            }
+        });
+
+        btnReset.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                imageView.setAlpha(0f);
+                imageView.setTranslationX(0f);
+                imageView.setRotation(0f);
+                
+                Toast.makeText(MainActivity.this, "Состояние сброшено", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+}
