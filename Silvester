@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="16dp">
+
+    <!-- Картинка питомца -->
+    <ImageView
+        android:id="@+id/ivPet"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        android:src="@drawable/pet_normal" />
+
+    <!-- Характеристики -->
+    <TextView
+        android:id="@+id/tvStats"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:padding="10dp"
+        android:text="Сытость: 100 | Счастье: 100\nЭнергия: 100 | Монеты: 50" />
+
+    <!-- Кнопки действий -->
+    <Button android:id="@+id/btnFeed" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Покормить (-10 монет)" />
+    <Button android:id="@+id/btnPlay" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Поиграть (-10 сытости, -10 энергии)" />
+    <Button android:id="@+id/btnSleep" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Поспать (+30 энергии)" />
+    <Button android:id="@+id/btnWork" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Поработать (+20 монет, -15 счастья)" />
+
+</LinearLayout>
+
+
+
+import android.content.SharedPreferences;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
+import androidx.appcompat.app.AppCompatActivity;
+
+public class MainActivity extends AppCompatActivity {
+
+    // --- НАСТРОЙКИ БАЛАНСА (Легко менять) ---
+    private static final int MAX_STAT = 100;
+    private static final int START_COINS = 50;
+    
+    // --- Переменные питомца ---
+    private int satiety = 100;
+    private int happiness = 100;
+    private int energy = 100;
+    private int coins = START_COINS;
+
+    // --- UI элементы ---
+    private ImageView ivPet;
+    private TextView tvStats;
+
+    // --- Сохранение данных ---
+    private SharedPreferences prefs;
+
+    // --- Для авто-уменьшения характеристик ---
+    private Handler handler = new Handler(Looper.getMainLooper());
+    private Runnable decayRunnable;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        initViews();
+        
+        // 1. Создаем хранилище
+        prefs = getSharedPreferences("TamagotchiPrefs", MODE_PRIVATE);
+        
+        // 2. Восстанавливаем состояние
+        loadGameState(); 
+        updateUI(); // Показываем актуальные данные
+        setupButtons();
+        setupAutoDecay(); // Настраиваем постепенное уменьшение характеристик
+    }
+
+    private void initViews() {
+        ivPet = findViewById(R.id.ivPet);
+        tvStats = findViewById(R.id.tvStats);
+        // ... находим кнопки
+    }
+
+    // ==========================================
+    // ЛОГИКА ДЕЙСТВИЙ
+    // ==========================================
+    
+    private void feedPet() {
+        if (coins >= 10) {
+            coins -= 10;
+            satiety = Math.min(MAX_STAT, satiety + 20);
+            happiness = Math.min(MAX_STAT, happiness + 5);
+            onActionPerformed();
+        }
+    }
+
+    private void playWithPet() {
+        if (energy >= 10 && satiety >= 10) {
+            energy -= 10;
+            satiety -= 10;
+            happiness = Math.min(MAX_STAT, happiness + 15);
+            onActionPerformed();
+        }
+    }
+
+    // ... аналогично для sleep и work
+    
+    private void onActionPerformed() {
+        updateUI();
+        saveGameState();
+    }
+
+    // ==========================================
+    // ОБНОВЛЕНИЕ ИНТЕРФЕЙСА И КАРТИНОК
+    // ==========================================
+    
+    private void updateUI() {
+        // Обновляем текст
+        tvStats.setText(String.format("Сытость: %d | Счастье: %d\nЭнергия: %d | Монеты: %d", 
+                satiety, happiness, energy, coins));
+
+        // Меняем картинку в зависимости от худшего показателя
+        if (energy < 20) {
+            ivPet.setImageResource(R.drawable.pet_sleepy);
+        } else if (satiety < 20) {
+            ivPet.setImageResource(R.drawable.pet_hungry);
+        } else if (happiness < 20) {
+            ivPet.setImageResource(R.drawable.pet_sad);
+        } else {
+            ivPet.setImageResource(R.drawable.pet_normal);
+        }
+    }
+
+    // ==========================================
+    // СОХРАНЕНИЕ И ВОССТАНОВЛЕНИЕ (SharedPreferences)
+    // ==========================================
+    
+    private void saveGameState() {
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putInt("satiety", satiety);
+        editor.putInt("happiness", happiness);
+        editor.putInt("energy", energy);
+        editor.putInt("coins", coins);
+        editor.putLong("lastVisitTime", System.currentTimeMillis()); // Для опционального задания
+        editor.apply();
+    }
+
+    private void loadGameState() {
+        satiety = prefs.getInt("satiety", 100);
+        happiness = prefs.getInt("happiness", 100);
+        energy = prefs.getInt("energy", 100);
+        coins = prefs.getInt("coins", START_COINS);
+
+        // --- ОПЦИОНАЛЬНО: Уменьшение характеристик за время отсутствия ---
+        long lastTime = prefs.getLong("lastVisitTime", System.currentTimeMillis());
+        long currentTime = System.currentTimeMillis();
+        long elapsedSeconds = (currentTime - lastTime) / 1000;
+
+        // За каждую минуту (60 сек) отсутствия отнимаем сытость и энергию
+        if (elapsedSeconds > 60) {
+            int minutesAway = (int) (elapsedSeconds / 60);
+            satiety = Math.max(0, satiety - (minutesAway * 2)); // -2 сытости в минуту
+            energy = Math.max(0, energy - (minutesAway * 1));   // -1 энергии в минуту
+        }
+    }
+
+    // ==========================================
+    // АВТОМАТИЧЕСКОЕ УМЕНЬШЕНИЕ (Handler) [Опционально 4]
+    // ==========================================
+    
+    private void setupAutoDecay() {
+        decayRunnable = new Runnable() {
+            @Override
+            public void run() {
+                if (satiety > 0) satiety--;
+                if (energy > 0) energy--;
+                
+                updateUI();
+                saveGameState();
+                
+                // Повторять каждые 30 секунд (30000 мс)
+                handler.postDelayed(this, 30000); 
+            }
+        };
+        handler.postDelayed(decayRunnable, 30000);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        saveGameState(); // Сохраняем при сворачивании приложения
+    }
+    
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        handler.removeCallbacks(decayRunnable); // Убираем таймер, чтобы не жрал батарею
+    }
+}
