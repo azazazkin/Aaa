@@ -1,0 +1,116 @@
+using System.Collections.ObjectModel;
+
+namespace StoreCatalog
+{
+    // Модель товара
+    public class Product
+    {
+        public string Name { get; set; }
+        public string Category { get; set; }
+        public decimal Price { get; set; }
+        public string ImageUrl { get; set; } // Ссылка на картинку (по желанию)
+    }
+
+    // Класс для имитации базы данных (ViewModel)
+    public class MainViewModel
+    {
+        public string AppTitle { get; set; } = "Каталог продуктов";
+        
+        // Коллекция для привязки к интерфейсу
+        public ObservableCollection<Product> Products { get; set; }
+
+        public MainViewModel()
+        {
+            Products = new ObservableCollection<Product>
+            {
+                new Product { Name = "Молоко 3.2%", Category = "Молочные продукты", Price = 85.50m, ImageUrl = "https://via.placeholder.com/150?text=Milk" },
+                new Product { Name = "Хлеб Бородинский", Category = "Хлеб/выпечка", Price = 45.00m, ImageUrl = "https://via.placeholder.com/150?text=Bread" },
+                new Product { Name = "Яблоки Голден", Category = "Овощи и фрукты", Price = 120.00m, ImageUrl = "https://via.placeholder.com/150?text=Apples" },
+                new Product { Name = "Сок Добрый", Category = "Напитки", Price = 110.00m, ImageUrl = "https://via.placeholder.com/150?text=Juice" },
+                new Product { Name = "Шоколад Аленка", Category = "Сладости", Price = 99.90m, ImageUrl = "https://via.placeholder.com/150?text=Chocolate" }
+            };
+        }
+    }
+}
+
+
+
+<Window x:Class="StoreCatalog.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:StoreCatalog"
+        Title="Магазин" Height="600" Width="800" WindowStartupLocation="CenterScreen">
+    
+    <!-- Устанавливаем DataContext -->
+    <Window.DataContext>
+        <local:MainViewModel/>
+    </Window.DataContext>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/> <!-- Заголовок -->
+            <RowDefinition Height="*"/>    <!-- Список товаров -->
+        </Grid.RowDefinitions>
+
+        <!-- 5. В верхней части окна должно отображаться название -->
+        <TextBlock Text="{Binding AppTitle}" 
+                   FontSize="28" FontWeight="Bold" 
+                   HorizontalAlignment="Center" Margin="20" Foreground="#333"/>
+
+        <!-- 1. Отображение списка продуктов -->
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Margin="10">
+            <!-- 3. Продукты должны отображаться в виде отдельных строк/карточек -->
+            <ItemsControl ItemsSource="{Binding Products}">
+                <!-- Настраиваем отображение в виде сетки (карточек) -->
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel Orientation="Horizontal" HorizontalAlignment="Center"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+
+                <!-- 2. Каждый продукт должен содержать: название, категорию, цену, (изображение) -->
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border BorderBrush="#DDD" BorderThickness="1" CornerRadius="8" 
+                                Margin="10" Padding="10" Width="200" Background="#FAFAFA">
+                            <StackPanel>
+                                <!-- Изображение (по желанию) -->
+                                <Image Source="{Binding ImageUrl}" Height="150" Margin="0,0,0,10" Stretch="Uniform"/>
+                                
+                                <!-- Название -->
+                                <TextBlock Text="{Binding Name}" FontSize="16" FontWeight="Bold" 
+                                           TextWrapping="Wrap" HorizontalAlignment="Center"/>
+                                
+                                <!-- Категория -->
+                                <TextBlock Text="{Binding Category}" FontSize="12" Foreground="#666" 
+                                           HorizontalAlignment="Center" Margin="0,5,0,10"/>
+                                
+                                <!-- Цена -->
+                                <TextBlock Text="{Binding Price, StringFormat={}{0:C}}" 
+                                           FontSize="18" FontWeight="Bold" Foreground="#E91E63" 
+                                           HorizontalAlignment="Center"/>
+                            </StackPanel>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+    </Grid>
+</Window>
+
+
+
+using System.Windows;
+
+namespace StoreCatalog
+{
+    public partial class MainWindow : Window
+    {
+        public MainWindow()
+        {
+            InitializeComponent();
+            // Если DataContext не задан в XAML, раскомментируйте строку ниже:
+            // DataContext = new MainViewModel();
+        }
+    }
+}
