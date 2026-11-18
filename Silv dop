@@ -1,0 +1,16 @@
+private void setupButtons() {
+    findViewById(R.id.btnFeed).setOnClickListener(v -> feedPet());
+    findViewById(R.id.btnPlay).setOnClickListener(v -> playWithPet());
+    
+    // Для кнопок "Поспать" и "Поработать" действия аналогичные:
+    findViewById(R.id.btnSleep).setOnClickListener(v -> {
+        energy = Math.min(100, energy + 30);
+        onActionPerformed();
+    });
+    
+    findViewById(R.id.btnWork).setOnClickListener(v -> {
+        coins += 20;
+        happiness = Math.max(0, happiness - 15);
+        onActionPerformed();
+    });
+}
